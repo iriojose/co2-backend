@@ -23,7 +23,7 @@ const validar = async function(req, res, next) {
             req.userId = data.id;
             next();
         }).catch(function(){
-            return res.status(403).json({ message: "You are not allowed to use this API. Please contact: iriojgomezv@gmail.com." });
+            return res.status(403).json({ message: "You are not allowed to use this API. Please contact: teamlead@somossistemas.com." });
         })
     } catch (error) {
         console.log(error);

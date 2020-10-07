@@ -1,9 +1,9 @@
-const axiosUtils = require("./encript");
+const axiosUtils = require("./encript")
 let { createAxios } = axiosUtils;
 const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 const moment = require('moment');
-const { DATA_URL, TOKEN_KEY, NOTS_URL } = require("./keys");
+const { DATA_URL, TOKEN_KEY } = require("./keys");
 const { encriptar, compareHash } = require("./encript");
 
 const Unauthorized = {
@@ -102,7 +102,6 @@ async function validate(tenantId, user_token) {
         const user = await connection.post(`/mysql/query`, { sql: sql });
 
         if (!user.data[0]) return Unauthorized;
-            
         const response = { data: user.data[0] };
 
         return { response, code: 200 };
@@ -138,7 +137,7 @@ async function sendRecuperationMail(tenantId, mail) {
                 message: template,
                 subject: "Solicitaste un cambio de contraseña",
                 email: data[0].email,
-                link: `http://localhost:84/co2/resetpassword/${data[0].email}/${hash}`,
+                link: `http://localhost:81/resetpassword/${data[0].email}/${hash}`,
                 type: "PWD_RESET"
             }
         })
@@ -168,9 +167,9 @@ async function sendVerifyMail(tenantId, mail) {
         await connection.post(`/mail/sendmail`, {
             data: {
                 message: template,
-                subject: "Confirma tu cuenta de co2 app",
+                subject: "Confirma tu cuenta de co2",
                 email: data[0].email,
-                link: `http://localhost:84/co2/verify/${data[0].email}/${hash}`,
+                link: `http://localhost:81/verify/${data[0].email}/${hash}`,
                 type: "PWD_VERIFY"
             }
         })
@@ -223,9 +222,9 @@ async function resetPassword(tenantId, usuario, password) {
 
 const getForgotTemplate =function(name) {
     //TODO, NEW TEMPLATE
-    return  `¡Saludos desde co2 app, ${name}! 
+    return  `¡Saludos desde co2, ${name}! 
     
-    Si no solicitaste este mensaje. Por favor ponte en contacto con iriojgomezv@gmail.com o cambia inmediatamente tus credentiales de co2 app.
+    Si no solicitaste este mensaje. Por favor ponte en contacto con iriojgomezv@gmail.com o cambia inmediatamente tus credentiales de co2.
     
     
     Para proceder a recuperar tu contraseña, por favor, haz click en el siguiente enlace.`;
@@ -233,7 +232,7 @@ const getForgotTemplate =function(name) {
 
 const getVerifyTemplate =function(name) {
     //TODO, NEW TEMPLATE
-    return  `¡Saludos desde co2 app, ${name}! 
+    return  `¡Saludos desde co2, ${name}! 
     
     Requerimos que confirmes que eres el propietario de este email. Por favor, haz click en el siguiente enlace.`;
 }

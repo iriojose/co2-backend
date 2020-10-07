@@ -2,7 +2,7 @@ const axiosUtils = require("./encript");
 let { getTenantId } = axiosUtils;
 const { Router } = require('express');
 const router = Router();
-const { apiAccess, login, signup, validate, encript, sendRecuperationMail, resetPassword,validPasswordHash, sendVerifyMail } = require("./auth");
+const { apiAccess, login, signup,signUpClient,signUpSeller, validate, encript, sendRecuperationMail, resetPassword,validPasswordHash, sendVerifyMail } = require("./auth");
 
 router.post('/encript', async (req, res) =>{
     let { password } = req.body;
@@ -16,7 +16,7 @@ router.post('/encript', async (req, res) =>{
 });
 
 router.post('/validate', async (req, res) => {
-    console.log("req" +req,req.body)
+     console.log("req" +req,req.body)
     let { token, data } = req.body;
     try {
         let tenantId = getTenantId(req);
