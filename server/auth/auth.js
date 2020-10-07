@@ -35,7 +35,7 @@ async function apiAccess(tenantId, token) {
         let connection = createAxios(DATA_URL, tenantId);
         if (!token) return false;
         
-        const sql = `SELECT * FROM usuario WHERE login = '${token.user}' or email = '${token.user}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${token.user}'`;
 
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         if (!data[0]) return false;
@@ -53,7 +53,7 @@ async function login(tenantId, usuario, password) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${usuario}' or email = '${usuario}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${usuario}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
 
 
@@ -73,7 +73,7 @@ async function signup(tenantId, newUser) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${newUser.login}' or email = '${newUser.email}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${newUser.email}'`;
         let  { check }  = await connection.post(`/mysql/query`, { sql: sql });
         if (check) return Conflict;
 
@@ -97,25 +97,11 @@ async function validate(tenantId, user_token) {
         let payload = jwt.verify(user_token, TOKEN_KEY || "2423503");
 
         const sql = `SELECT * FROM usuario 
-                     WHERE usuario.login = '${payload._id}' OR usuario.email = '${payload._id}'`;
+                     WHERE usuario.email = '${payload._id}'`;
         
         const user = await connection.post(`/mysql/query`, { sql: sql });
 
         if (!user.data[0]) return Unauthorized;
-
-        if (user.data[0].perfil_id === 3){
-            const sql = `SELECT * FROM adm_clientes 
-                         WHERE usuario_id = ${user.data[0].id}`;
-            const { data } = await connection.post(`/mysql/query`, { sql: sql });
-            user.data[0].cliente = data;
-        }
-
-        if (user.data[0].adm_vendedor_id !== null){
-            const sql = `SELECT * FROM adm_vendedor 
-                         WHERE id = ${user.data[0].adm_vendedor_id}`;
-            const { data } = await connection.post(`/mysql/query`, { sql: sql });
-            user.data[0].vendedor = data;
-        }
             
         const response = { data: user.data[0] };
 
@@ -135,7 +121,7 @@ async function sendRecuperationMail(tenantId, mail) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${mail}' or email = '${mail}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         
         if (!data[0]) return Unauthorized;
@@ -167,7 +153,7 @@ async function sendVerifyMail(tenantId, mail) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${mail}' or email = '${mail}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         
         if (!data[0]) return Unauthorized;
@@ -182,7 +168,7 @@ async function sendVerifyMail(tenantId, mail) {
         await connection.post(`/mail/sendmail`, {
             data: {
                 message: template,
-                subject: "Confirma tu cuenta de hoyprovoca.com",
+                subject: "Confirma tu cuenta de co2 app",
                 email: data[0].email,
                 link: `http://localhost:84/co2/verify/${data[0].email}/${hash}`,
                 type: "PWD_VERIFY"
@@ -199,7 +185,7 @@ async function validPasswordHash(tenantId, mail, hash) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${mail}' or email = '${mail}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         
         if (!data[0]) return NotFound;
@@ -222,7 +208,7 @@ async function resetPassword(tenantId, usuario, password) {
     try {
         let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE login = '${usuario}' or email = '${usuario}'`;
+        const sql = `SELECT * FROM usuario WHERE email = '${usuario}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         
         if (!data[0]) return Unauthorized;

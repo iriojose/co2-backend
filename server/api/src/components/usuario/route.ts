@@ -6,7 +6,7 @@ import { getTenantId } from '../../helpers/axios';
 
 const router = Router();
 
-//obtener todos los medios de transporte
+//obtener todos los usuario
 router.get("/", validar, async (req: Request, res: Response): Promise<Response> => {
 	try {
 		let tenantId: string = getTenantId(req);
@@ -31,18 +31,6 @@ router.get('/:id',validar, async (req:Request, res:Response):Promise<Response> =
     }
 });
 
-//crear un registro 
-router.post('/',validar, async (req:Request, res:Response):Promise<Response> => {
-    try {
-        let tenantId: string = getTenantId(req);
-        let {message,response,code} = await controller.create(req.body, tenantId);
-        return res.status(code).json(message || response);
-    } catch (error) {
-        console.log(error);
-        return res.status(InternalServerError.code).json({ message: InternalServerError.message });
-    }
-});
-
 //actualizar un registro 
 router.post('/:id',validar, async (req:Request, res:Response):Promise<Response> => {
     try {
@@ -61,6 +49,19 @@ router.delete('/:id',validar, async (req:Request, res:Response):Promise<Response
         let tenantId: string = getTenantId(req);
         let {message,code} = await controller.remove(req.params, tenantId);
         return res.status(code).json(message);
+    } catch (error) {
+        console.log(error);
+        return res.status(InternalServerError.code).json({ message: InternalServerError.message });
+    }
+});
+
+//obtener todos los viajes de un usuario
+router.get('/:id/viajes',validar, async (req:Request, res:Response):Promise<Response> => {
+    let {id} = req.params;
+    try {
+        let tenantId: string = getTenantId(req);
+        let {message,response,code} = await controller.getViajes(id,req.query, tenantId);
+        return res.status(code).json(message ||response);
     } catch (error) {
         console.log(error);
         return res.status(InternalServerError.code).json({ message: InternalServerError.message });
