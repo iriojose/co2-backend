@@ -1,7 +1,5 @@
 node_modules
 .env
-public/pages/*
-public/images/*
 dist
 .vscode
 db.json

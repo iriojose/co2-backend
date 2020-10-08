@@ -96,8 +96,7 @@ async function validate(tenantId, user_token) {
 
         let payload = jwt.verify(user_token, TOKEN_KEY || "2423503");
 
-        const sql = `SELECT * FROM usuario 
-                     WHERE usuario.email = '${payload._id}'`;
+        const sql = `SELECT * FROM usuario WHERE usuario.email = '${payload._id}'`;
         
         const user = await connection.post(`/mysql/query`, { sql: sql });
 

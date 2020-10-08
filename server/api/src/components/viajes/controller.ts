@@ -5,8 +5,8 @@ import {ITransporte} from '../medio_transporte/model';
 const model = "viajes";
 
 /**
- * Create a new bank
- * @param body the data of the new bank
+ * crea un nuevo viaje
+ * @param body es la data del nuevo viaje
  */
 export const create = async (body:any, tenantId: string): Promise<any> =>{
     let {data,data2} = body;
@@ -97,8 +97,8 @@ export const getOne = async (id: string | number, query: any, tenantId: string):
 }
 
 /**
- * Delete a user
- * @param params params request object 
+ * elimina un viaje
+ * @param params 
  */
 export const remove = async (params:any, tenantId: string): Promise<any> => {
     let { id } = params;
