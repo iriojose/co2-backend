@@ -1,7 +1,7 @@
 {
-  "name": "co2-backend",
+  "name": "test-backend",
   "version": "1.0.0",
-  "description": "backend para app de calculadora de co2",
+  "description": "backend para test",
   "main": "index.js",
   "scripts": {
     "start:api": "node server/api/dist/index.js",
