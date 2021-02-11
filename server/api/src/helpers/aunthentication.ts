@@ -8,7 +8,7 @@ export async function validar(req: Request, res: Response, next: NextFunction) {
     try {
         let head: string = req.headers['x-access-control'] as string;
         let tenantId: string = getTenantId(req);
-        console.log("[LOG] Request for tenantId: "+tenantId)
+        console.log("[LOG] Request for tenantId: "+tenantId);
 
         let connection = createAxios(authURL as string, tenantId);
 

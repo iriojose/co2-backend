@@ -1,8 +1,7 @@
-export interface ITransporte {
+export interface INotas {
     id?:                string | number,
-    nombre:             string,
     descripcion:        string,
-    factor_emision:     number,
+    usuario_id:         number,
     created_at:         string,
     updated_at:         string,
 }

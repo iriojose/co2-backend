@@ -39,7 +39,7 @@ async function apiAccess(tenantId, token) {
 
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
         if (!data[0]) return false;
-        let valid = await compareHash(token.password, data[0].password)
+        let valid = await compareHash(token.password, data[0].password);
         if (!valid) return false;
 
         return { validado: true };
@@ -115,125 +115,6 @@ async function encript(password) {
     return pass;
 }
 
-async function sendRecuperationMail(tenantId, mail) {
-    try {
-        let connection = createAxios(DATA_URL, tenantId);
 
-        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
-        let { data } = await connection.post(`/mysql/query`, { sql: sql });
-        
-        if (!data[0]) return Unauthorized;
 
-        let hash = crypto.randomBytes(3).toString('hex').toUpperCase();
-        let template = getForgotTemplate(data[0].nombre);
-        
-        await connection.post(`/mysql/usuario/${data[0].id}`, { data: { recovery: hash, recoverydate: moment().format('YYYY-MM-DD hh:mm:ss') } });
-
-        connection = createAxios(NOTS_URL, tenantId);
-
-        await connection.post(`/mail/sendmail`, {
-            data: {
-                message: template,
-                subject: "Solicitaste un cambio de contraseña",
-                email: data[0].email,
-                link: `http://localhost:81/resetpassword/${data[0].email}/${hash}`,
-                type: "PWD_RESET"
-            }
-        })
-
-        return { code: 200, token: hash }
-    } catch (error) {
-        throw new Error(`Error al mandar el correo, ${error}`);
-    }
-}
-
-async function sendVerifyMail(tenantId, mail) {
-    try {
-        let connection = createAxios(DATA_URL, tenantId);
-
-        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
-        let { data } = await connection.post(`/mysql/query`, { sql: sql });
-        
-        if (!data[0]) return Unauthorized;
-
-        let hash = crypto.randomBytes(3).toString('hex').toUpperCase();
-        let template = getVerifyTemplate(data[0].nombre);
-        
-        await connection.post(`/mysql/usuario/${data[0].id}`, { data: { recovery: hash, recoverydate: moment().format('YYYY-MM-DD hh:mm:ss') } });
-
-        connection = createAxios(NOTS_URL, tenantId);
-
-        await connection.post(`/mail/sendmail`, {
-            data: {
-                message: template,
-                subject: "Confirma tu cuenta de co2",
-                email: data[0].email,
-                link: `http://localhost:81/verify/${data[0].email}/${hash}`,
-                type: "PWD_VERIFY"
-            }
-        })
-
-        return { code: 200, token: hash }
-    } catch (error) {
-        throw new Error(`Error al mandar el correo, ${error}`);
-    }
-}
-
-async function validPasswordHash(tenantId, mail, hash) {
-    try {
-        let connection = createAxios(DATA_URL, tenantId);
-
-        const sql = `SELECT * FROM usuario WHERE email = '${mail}'`;
-        let { data } = await connection.post(`/mysql/query`, { sql: sql });
-        
-        if (!data[0]) return NotFound;
-
-        let timeNow = moment().add(1, "hours");
-        if (moment(data[0].recoverydate) > timeNow) return Expired;
-        
-        if (hash != data[0].recovery) return Unauthorized;
-        
-        await connection.post(`/mysql/usuario/${data[0].id}`, { data: { recovery: '' } });
-        
-        return { code: 200, message: 'valid', user: data[0] }
-    } catch (error) {
-        throw new Error(`Error al compareHash el hash de recuperacion, ${error}`);
-    }
-}
-
-async function resetPassword(tenantId, usuario, password) {
-    if (!usuario || !password) return Unauthorized;
-    try {
-        let connection = createAxios(DATA_URL, tenantId);
-
-        const sql = `SELECT * FROM usuario WHERE email = '${usuario}'`;
-        let { data } = await connection.post(`/mysql/query`, { sql: sql });
-        
-        if (!data[0]) return Unauthorized;
-        let newpass = await encriptar(password);
-        await connection.post(`/mysql/usuario/${data[0].id}`, { data: { password: newpass } });
-        
-        return { code: 201, message: 'password changed' }
-    } catch (error) {
-        throw new Error(`Error al cambiar la contraseña, ${error}`);
-    }
-}
-
-const getForgotTemplate =function(name) {
-    //TODO, NEW TEMPLATE
-    return  `¡Saludos desde co2, ${name}! 
-    
-    Si no solicitaste este mensaje. Por favor ponte en contacto con iriojgomezv@gmail.com o cambia inmediatamente tus credentiales de co2.
-    
-    
-    Para proceder a recuperar tu contraseña, por favor, haz click en el siguiente enlace.`;
-}
-
-const getVerifyTemplate =function(name) {
-    //TODO, NEW TEMPLATE
-    return  `¡Saludos desde co2, ${name}! 
-    
-    Requerimos que confirmes que eres el propietario de este email. Por favor, haz click en el siguiente enlace.`;
-}
-
-module.exports = { apiAccess, login, signup, validate, encript, sendRecuperationMail, sendVerifyMail, resetPassword, validPasswordHash }
+module.exports = { apiAccess, login, signup, validate, encript }

@@ -1,4 +1,4 @@
-# co2 Back-end
+# Test Back-end
 Api rest para la conexion con diferentes front-end
 
 ## requisitos
@@ -47,8 +47,8 @@ El primero arranca todo el backend en modo desarrollo y el segundo arranca un se
 
 ## aviso
 
-En la carpeta public/pages/viajesco2 se encuentra el build del frontend del proyecto, una vez hacer npm run deploy, puedes acceder a el por la ruta local
-localhost:84/viajesco2/
+En la carpeta public/pages/test se encuentra el build del frontend del proyecto, una vez hacer npm run deploy, puedes acceder a el por la ruta local
+http://localhost:84/test/
 
 
 ## Docs
@@ -152,6 +152,5 @@ Response:
 
 ## Endpoints
 
-- **Viajes**
+- **Notas**
 - **usuario**
-- **umedio_transporte**

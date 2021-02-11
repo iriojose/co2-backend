@@ -55,12 +55,12 @@ router.delete('/:id',validar, async (req:Request, res:Response):Promise<Response
     }
 });
 
-//obtener todos los viajes de un usuario
-router.get('/:id/viajes',validar, async (req:Request, res:Response):Promise<Response> => {
+//obtener todos las notas de un usuario
+router.get('/:id/notas',validar, async (req:Request, res:Response):Promise<Response> => {
     let {id} = req.params;
     try {
         let tenantId: string = getTenantId(req);
-        let {message,response,code} = await controller.getViajes(id,req.query, tenantId);
+        let {message,response,code} = await controller.getNotas(id,req.query, tenantId);
         return res.status(code).json(message ||response);
     } catch (error) {
         console.log(error);

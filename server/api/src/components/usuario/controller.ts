@@ -3,24 +3,18 @@ import * as respuestas from '../../errors';
 import { IUsuario } from './model';
 const model = "usuario";
 
-export async function getViajes(id: string | number, query: any, tenantId: string): Promise<any> {
+export async function getNotas(id: string | number, query: any, tenantId: string): Promise<any> {
     try {
         if (isNaN(id as number)) return respuestas.InvalidID;
 
         let usuario: IUsuario = await consult.getOne(tenantId, model, id, query);
         if (!usuario) return respuestas.ElementNotFound;
 
-        let pivotes: any = await consult.getOtherByMe(tenantId, model, id, "transportistas", query);
-        let totalCount = await consult.countOther(tenantId, model, "transportistas", id);
+        let pivotes: any = await consult.getOtherByMe(tenantId, model, id, "notas", query);
+        let totalCount = await consult.countOther(tenantId, model, "notas", id);
         let count = pivotes.length;
 
         if (count <= 0) return respuestas.Empty;
-
-        for (let i = 0; i < pivotes.length; i++) {
-            let pres: any[] = await consult.getOne(tenantId, "viajes", pivotes[i].viajes_id, query);
-            pivotes[i].detalles = pres;
-        }
-
         let response = Object.assign({ totalCount, count, pivotes});
         
         return { response, code: respuestas.Ok.code };
