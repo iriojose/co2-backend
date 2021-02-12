@@ -56,10 +56,9 @@ async function login(tenantId, usuario, password) {
         const sql = `SELECT * FROM usuario WHERE email = '${usuario}'`;
         let { data } = await connection.post(`/mysql/query`, { sql: sql });
 
-
         if (!data[0]) return Unauthorized;
 
-        let valid = await compareHash(password, data[0].password);
+        let valid = await compareHash(password,data[0].password);
         if (!valid) return Unauthorized;
 
         const token = jwt.sign({ _id: data[0].email }, TOKEN_KEY || "2423503", { expiresIn: 60 * 60 * 24 });
