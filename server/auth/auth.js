@@ -62,7 +62,7 @@ async function login(tenantId, usuario, password) {
         let valid = await compareHash(password, data[0].password);
         if (!valid) return Unauthorized;
 
-        const token = jwt.sign({ _id: data[0].login }, TOKEN_KEY || "2423503", { expiresIn: 60 * 60 * 24 });
+        const token = jwt.sign({ _id: data[0].email }, TOKEN_KEY || "2423503", { expiresIn: 60 * 60 * 24 });
         return { data: data[0] , token, code: 200 };
     } catch (error) {
         throw new Error(`Error al hacer login, ${error}`);
@@ -81,7 +81,7 @@ async function signup(tenantId, newUser) {
         let { data } = await connection.post(`/mysql/usuario`, { data: newUser });
 
         newUser.id = data.insertId
-        const token = jwt.sign({ _id: newUser.login }, TOKEN_KEY || "2423503", { expiresIn: 60 * 60 * 24 });
+        const token = jwt.sign({ _id: newUser.email }, TOKEN_KEY || "2423503", { expiresIn: 60 * 60 * 24 });
 
         return { data: newUser, token, code: 200 };
     } catch (error) {
